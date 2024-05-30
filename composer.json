@@ -1,0 +1,24 @@
+{
+    "name": "alexey/laravel-metrics",
+    "description": "Package to check Laravel API metrics",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Alexey\\LaravelMetrics\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "role": "Developer",
+            "name": "Alexey Ermolenko",
+            "email": "alexey.ermolenko@saritasa.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "10.x-dev"
+    }
+}
