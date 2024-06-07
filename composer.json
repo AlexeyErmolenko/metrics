@@ -1,11 +1,16 @@
 {
-    "name": "alexey/laravel-metrics",
+    "name": "saritasa/laravel-metrics",
     "description": "Package to check Laravel API metrics",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Alexey\\LaravelMetrics\\": "src/"
+            "Saritasa\\LaravelMetrics\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Saritasa\\LaravelMetrics\\Test\\": "tests/"
         }
     },
     "authors": [
@@ -19,6 +24,31 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.1",
-        "illuminate/support": "10.x-dev"
+        "illuminate/support": "^10.48",
+        "illuminate/routing": "^10.48",
+        "illuminate/http": "^10.48",
+        "illuminate/queue": "^10.48",
+        "illuminate/database": "^10.48",
+        "illuminate/collections": "^10.48"
+    },
+    "require-dev": {
+        "ext-sqlite3": "*",
+        "orchestra/testbench": "^8.23",
+        "phpunit/phpunit": "^10.5"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Saritasa\\LaravelMetrics\\Providers\\MetricsServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": [
+            "vendor/bin/phpunit"
+        ]
     }
 }

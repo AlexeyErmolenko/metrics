@@ -1,0 +1,142 @@
+<?php
+
+namespace Saritasa\LaravelMetrics\Test\Unit\Services\QueueService;
+
+use Illuminate\Contracts\Queue\Queue as QueueContract;
+use Illuminate\Queue\DatabaseQueue;
+use Illuminate\Queue\SyncQueue;
+use Illuminate\Support\Facades\DB;
+use Mockery;
+use PHPUnit\Framework\TestCase;
+use Saritasa\LaravelMetrics\Services\QueueService\Drivers\QueueDriverException;
+use Saritasa\LaravelMetrics\Services\QueueService\QueueService;
+use stdClass;
+
+/**
+ * @covers \Saritasa\LaravelMetrics\Services\QueueService\QueueService
+ */
+class QueueServiceTest extends TestCase
+{
+    /**
+     * @return void
+     *
+     * @throws QueueDriverException
+     */
+    public function testGetQueueSizeWithSync(): void
+    {
+        $syncQueueMock = Mockery::mock(SyncQueue::class)
+            ->shouldReceive('getConnectionName')
+            ->once()
+            ->andReturns('sync')
+            ->getMock()
+            ->shouldReceive('size')
+            ->once()
+            ->andReturns($size = 0)
+            ->getMock();
+
+        $instance = $this->prepareInstance($syncQueueMock);
+
+        $this->assertSame($size, $instance->getQueueSize());
+    }
+
+    /**
+     * @return void
+     *
+     * @throws QueueDriverException
+     */
+    public function testGetQueueSizeWithSyncWithError(): void
+    {
+        $syncQueueMock = Mockery::mock(DatabaseQueue::class)
+            ->shouldReceive('getConnectionName')
+            ->once()
+            ->andReturns('sync')
+            ->getMock();
+
+        $instance = $this->prepareInstance($syncQueueMock);
+
+        $this->expectException(QueueDriverException::class);
+        $this->expectExceptionMessage('Incorrect connection for driver.');
+
+        $instance->getQueueSize();
+    }
+
+    /**
+     * @return void
+     *
+     * @throws QueueDriverException
+     */
+    public function testGetQueueSizeWithDatabase(): void
+    {
+        $queue = new stdClass();
+        $queue->queue = 'default';
+
+        $queueList = collect();
+        $queueList->push($queue);
+
+        $dbQueueMock = Mockery::mock(DatabaseQueue::class)
+            ->shouldReceive('getConnectionName')
+            ->once()
+            ->andReturns('database')
+            ->getMock()
+            ->shouldReceive('size')
+            ->once()
+            ->andReturns($size = $queueList->count())
+            ->getMock();
+
+        DB::shouldReceive('query')
+            ->once()
+            ->andReturns(Mockery::self())
+            ->getMock()
+            ->shouldReceive('select')
+            ->once()
+            ->andReturns(Mockery::self())
+            ->getMock()
+            ->shouldReceive('from')
+            ->once()
+            ->andReturns(Mockery::self())
+            ->getMock()
+            ->shouldReceive('groupBy')
+            ->once()
+            ->andReturns(Mockery::self())
+            ->getMock()
+            ->shouldReceive('get')
+            ->once()
+            ->andReturns($queueList)
+        ;
+
+        $instance = $this->prepareInstance($dbQueueMock);
+
+        $this->assertSame($size, $instance->getQueueSize());
+    }
+
+    /**
+     * @return void
+     *
+     * @throws QueueDriverException
+     */
+    public function testGetQueueSizeWithDatabaseWithError(): void
+    {
+        $dbQueueMock = Mockery::mock(SyncQueue::class)
+            ->shouldReceive('getConnectionName')
+            ->once()
+            ->andReturns('database')
+            ->getMock();
+
+        $instance = $this->prepareInstance($dbQueueMock);
+
+        $this->expectException(QueueDriverException::class);
+        $this->expectExceptionMessage('Incorrect connection for driver.');
+
+        $instance->getQueueSize();
+    }
+
+    /**
+     * @param QueueContract $queue
+     *
+     * @return QueueService
+     */
+    private function prepareInstance(QueueContract $queue): QueueService
+    {
+        return new QueueService($queue);
+    }
+}
