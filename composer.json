@@ -29,6 +29,7 @@
         "illuminate/http": "^10.48",
         "illuminate/queue": "^10.48",
         "illuminate/database": "^10.48",
+        "illuminate/redis": "^10.48",
         "illuminate/collections": "^10.48"
     },
     "require-dev": {

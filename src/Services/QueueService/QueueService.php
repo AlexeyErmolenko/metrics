@@ -5,6 +5,7 @@ namespace Saritasa\LaravelMetrics\Services\QueueService;
 use Saritasa\LaravelMetrics\Services\QueueService\Drivers\DatabaseQueueDriver;
 use Saritasa\LaravelMetrics\Services\QueueService\Drivers\QueueDriver;
 use Saritasa\LaravelMetrics\Services\QueueService\Drivers\QueueDriverException;
+use Saritasa\LaravelMetrics\Services\QueueService\Drivers\RedisQueueDriver;
 use Saritasa\LaravelMetrics\Services\QueueService\Drivers\SyncQueueDriver;
 use Illuminate\Contracts\Queue\Queue as QueueContract;
 
@@ -15,7 +16,7 @@ class QueueService
 {
     private  const
         DATABASE = 'database',
-        SYNC = 'sync';
+        REDIS = 'redis';
 
     /**
      * Service to get Queue metrics.
@@ -53,6 +54,7 @@ class QueueService
 
         return match ($connectionName) {
             self::DATABASE => new DatabaseQueueDriver($this->queue),
+            self::REDIS => new RedisQueueDriver($this->queue),
             default => new SyncQueueDriver($this->queue),
         };
     }
