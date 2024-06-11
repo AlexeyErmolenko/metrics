@@ -146,12 +146,12 @@ class QueueServiceTest extends TestCase
         ];
 
         $keysList =  [
-            'laravel_database_queues:default',
-            'laravel_database_queues:test1',
-            'laravel_database_queues:test1:notify',
-            'laravel_database_queues:test2:notify',
-            'laravel_database_queues:test2',
-            'laravel_database_queues:default:notify',
+            'laravel_queues:default',
+            'laravel_queues:default:notify',
+            'laravel_queues:test1',
+            'laravel_queues:test1:notify',
+            'laravel_queues:test2',
+            'laravel_queues:test2:notify',
         ];
 
         $redisConnectionMock = Mockery::mock(Connection::class)

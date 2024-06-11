@@ -4,20 +4,12 @@ namespace Saritasa\LaravelMetrics\Services\QueueService\Drivers;
 
 use Illuminate\Contracts\Queue\Queue as QueueContract;
 use Illuminate\Queue\RedisQueue;
-use Illuminate\Redis\Connections\Connection;
 
 /**
  * Driver for redis queue.
  */
 class RedisQueueDriver implements QueueDriver
 {
-    /**
-     * Connection to redis.
-     *
-     * @var Connection
-     */
-    private Connection $redis;
-
     /**
      * Driver for redis queue.
      *
@@ -30,8 +22,6 @@ class RedisQueueDriver implements QueueDriver
         if (!$this->queue instanceof RedisQueue) {
             throw new QueueDriverException();
         }
-
-        $this->redis = $this->queue->getConnection();
     }
 
     /**
@@ -58,8 +48,10 @@ class RedisQueueDriver implements QueueDriver
      */
     private function prepareQueueKeyList(): array
     {
+        $redis = $this->queue->getConnection();
+
         $keyList = [];
-        $allKeyList = $this->redis->command('keys', ['queues:*']);
+        $allKeyList = $redis->command('keys', ['queues:*']);
 
         if (!is_array($allKeyList)) {
             return $keyList;
