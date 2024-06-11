@@ -24,17 +24,17 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.1",
-        "illuminate/support": "^10.48",
-        "illuminate/routing": "^10.48",
-        "illuminate/http": "^10.48",
-        "illuminate/queue": "^10.48",
-        "illuminate/database": "^10.48",
-        "illuminate/redis": "^10.48",
-        "illuminate/collections": "^10.48"
+        "illuminate/support": "10.*",
+        "illuminate/routing": "10.*",
+        "illuminate/http": "10.*",
+        "illuminate/queue": "10.*",
+        "illuminate/database": "10.*",
+        "illuminate/redis": "10.*",
+        "illuminate/collections": "10.*"
     },
     "require-dev": {
         "ext-sqlite3": "*",
-        "orchestra/testbench": "^8.23",
+        "orchestra/testbench": "8.*",
         "phpunit/phpunit": "^10.5"
     },
     "extra": {
